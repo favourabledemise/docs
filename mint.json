@@ -15,7 +15,7 @@
       "to": "#07C983"
     }
   },
-  "openapi": "./openapi.json",
+  "openapi": "openapi.json",
   "topbarLinks": [
     {
       "name": "Support",

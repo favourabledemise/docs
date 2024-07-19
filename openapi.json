@@ -1,2223 +1,3995 @@
 {
-    "schemes": ["https"],
-    "swagger": "2.0",
-    "info": {
-        "description": "APIs fetchs the data based on query",
-        "title": "ODIN APIs",
-        "contact": {},
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
-        "version": "1.0"
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ODIN APIs",
+    "description": "APIs fetchs the data based on query",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "host": "staging.odinn.tech",
-    "basePath": "/v1/",
-    "paths": {
-        "/certificates/count": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the total no of records based on query",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Certificate"
-                ],
-                "summary": "Fetch the record count",
-                "parameters": [
-                    {
-                        "description": "Count Query",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/certificate.CertCountRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/certificate.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/certificate.CertCount"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    }
-                }
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "staging.odinn.tech/v1/"
+    }
+  ],
+  "paths": {
+    "/certificates/count": {
+      "post": {
+        "tags": [
+          "Certificate"
+        ],
+        "summary": "Get records count",
+        "description": "Get total no of records based on query",
+        "requestBody": {
+          "description": "Count Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/certificate.CertCountRequest"
+              }
             }
+          },
+          "required": true
         },
-        "/certificates/scroll": {
-            "post": {
-                "security": [
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
                     {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the record based on query. It uses es scroll api for the pagination.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Certificate"
-                ],
-                "summary": "Fetch the record based on query",
-                "parameters": [
+                      "$ref": "#/components/schemas/certificate.APIResponse"
+                    },
                     {
-                        "description": "Search Query",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/certificate.CertScrollRequest"
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/certificate.CertCount"
                         }
+                      }
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/certificate.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/certificate.CertScroll"
-                                        },
-                                        "pagination": {
-                                            "$ref": "#/definitions/certificate.SearchPagination"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    }
+                  ]
                 }
+              }
             }
-        },
-        "/certificates/scroll/next": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the next batch of record based on query. It uses es scroll api for the pagination.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Certificate"
-                ],
-                "summary": "Fetch the next batch of record",
-                "parameters": [
-                    {
-                        "description": "Search Query",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/certificate.NextBatchRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/certificate.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/certificate.CertScroll"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/certificates/search": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the record based on query and blank query will return all records. It uses es searchafter for the pagination.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Certificate"
-                ],
-                "summary": "Fetch the record based on query",
-                "parameters": [
-                    {
-                        "description": "Search Query",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/certificate.CertSearchRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/certificate.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
-                                        },
-                                        "pagination": {
-                                            "$ref": "#/definitions/certificate.SearchPagination"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/certificates/summary": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the summary of the field based on query",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Certificate"
-                ],
-                "summary": "Create the summary of the field based on query",
-                "parameters": [
-                    {
-                        "description": "Summary",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/certificate.CertSummaryRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/certificate.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/eshandler.Aggregate"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
+          }
         },
-        "/certificates/{hash}": {
-            "get": {
-                "security": [
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/certificates/scroll": {
+      "post": {
+        "tags": [
+          "Certificate"
+        ],
+        "summary": "Get the record based on query",
+        "description": "Get the record based on query. It uses es scroll api for the pagination.",
+        "requestBody": {
+          "description": "Search Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/certificate.CertScrollRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
                     {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the complete certificate",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Certificate"
-                ],
-                "summary": "Fetch the complete certificate",
-                "parameters": [
+                      "$ref": "#/components/schemas/certificate.APIResponse"
+                    },
                     {
-                        "type": "string",
-                        "description": "get the complete cert by hash",
-                        "name": "hash",
-                        "in": "path",
-                        "required": true
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/certificate.CertScroll"
+                        },
+                        "pagination": {
+                          "$ref": "#/components/schemas/certificate.SearchPagination"
+                        }
+                      }
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/certificate.ErrorResponse"
-                        }
-                    }
+                  ]
                 }
+              }
             }
-        },
-        "/credits/usage": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get the user's credit usage details",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Credits"
-                ],
-                "summary": "Get the user's credit usage details",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/tokens.UserTokenStats"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/tokens.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/tokens.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/tokens.ErrorResponse"
-                        }
-                    }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/dns/count": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the count of subdomain records based on domain",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Dns"
-                ],
-                "summary": "Fetch the total no. of subdomain records",
-                "parameters": [
-                    {
-                        "description": "Query",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dns.DNSCountRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/dns.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/dns.Data"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dns.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dns.ErrorResponse"
-                        }
-                    }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/dns/search": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the subdomain records based on query",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Dns"
-                ],
-                "summary": "Fetch the subdomain record",
-                "parameters": [
-                    {
-                        "description": "Query",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dns.DNSRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/dns.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "pagination": {
-                                            "$ref": "#/definitions/dns.SearchPagination"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dns.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/dns.ErrorResponse"
-                        }
-                    }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
+          }
         },
-        "/exposed/buckets/count": {
-            "post": {
-                "security": [
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/certificates/scroll/next": {
+      "post": {
+        "tags": [
+          "Certificate"
+        ],
+        "summary": "Get the next batch of record",
+        "description": "Get the next batch of record based on query. It uses es scroll api for the pagination.",
+        "requestBody": {
+          "description": "Search Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/certificate.NextBatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
                     {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns exposed buckets count according to provided filters",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ExposedBuckets"
-                ],
-                "summary": "Get exposed bucket count",
-                "parameters": [
+                      "$ref": "#/components/schemas/certificate.APIResponse"
+                    },
                     {
-                        "description": "Count Request",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/exposed.CountRequest"
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/certificate.CertScroll"
                         }
+                      }
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/exposed.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/exposed.SearchCount"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
+                  ]
                 }
+              }
             }
-        },
-        "/exposed/buckets/search": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns exposed buckets according to provided filters",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ExposedBuckets"
-                ],
-                "summary": "Search exposed buckets",
-                "parameters": [
-                    {
-                        "description": "Search Query",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/exposed.SearchRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/exposed.BucketAPIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/exposed/buckets/summary": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns exposed buckets aggregated count according to provided filters",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ExposedBuckets"
-                ],
-                "summary": "exposed buckets summary",
-                "parameters": [
-                    {
-                        "description": "Summary Request",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/exposed.SummaryRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/exposed.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/exposed.Aggregate"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/exposed/files/count": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns overall count of exposed bucket files according to provided filters",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ExposedFiles"
-                ],
-                "summary": "Get file count",
-                "parameters": [
-                    {
-                        "description": "Count Request",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/exposed.CountRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/exposed.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/exposed.SearchCount"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
+          }
         },
-        "/exposed/files/search": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "returns the matching records according to provided filters",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ExposedFiles"
-                ],
-                "summary": "search exposed bucket files",
-                "parameters": [
-                    {
-                        "description": "Search Query",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/exposed.SearchRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/exposed.FileAPIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/certificates/search": {
+      "post": {
+        "tags": [
+          "Certificate"
+        ],
+        "summary": "Search records",
+        "description": "Search record baseds based on the query",
+        "requestBody": {
+          "description": "Search Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/certificate.CertSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.CertificateSearchResponse"
                 }
+              }
             }
-        },
-        "/exposed/files/summary": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns a summary of exposed bucket files according to provided filters",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ExposedFiles"
-                ],
-                "summary": "Get file summary",
-                "parameters": [
-                    {
-                        "description": "Summary Request",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/exposed.SummaryRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/exposed.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/exposed.Aggregate"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/exposed/{category}/": {
-            "get": {
-                "description": "Returns the fields data",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Fields"
-                ],
-                "summary": "Get the fields data",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "get the category",
-                        "name": "category",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/fields.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "Data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/fields.Field"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/fields.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/fields.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/fields.ErrorResponse"
-                        }
-                    }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/fields/certificates/{category}/": {
-            "get": {
-                "description": "Returns the fields data",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Fields"
-                ],
-                "summary": "Get the fields data",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "get the category",
-                        "name": "category",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/fields.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/fields.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/fields.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/fields.ErrorResponse"
-                        }
-                    }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
+          }
         },
-        "/fields/hosts/{category}/": {
-            "get": {
-                "description": "Returns the fields data",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Fields"
-                ],
-                "summary": "Get the fields data",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "get the category",
-                        "name": "category",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/fields.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/fields.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/fields.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/fields.ErrorResponse"
-                        }
-                    }
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/certificates/summary": {
+      "post": {
+        "tags": [
+          "Certificate"
+        ],
+        "summary": "Get summary",
+        "description": "Get summary of records based on the query",
+        "requestBody": {
+          "description": "Summary",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/certificate.CertSummaryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.CertificateSummaryResponse"
                 }
+              }
             }
-        },
-        "/hosts/count": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the total no of records based on query",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hosts"
-                ],
-                "summary": "Fetch the record count",
-                "parameters": [
-                    {
-                        "description": "Count Query",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.CountRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/ipservices.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/ipservices.CertCount"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/hosts/cve/{ip}/": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the complete ip cve details",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hosts"
-                ],
-                "summary": "Fetch the ip cve details",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "get the ip",
-                        "name": "ip",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/hosts/exploits/{ip}/": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the complete ip cve-exploits details",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hosts"
-                ],
-                "summary": "Fetch the ip cve details",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "get the ip",
-                        "name": "ip",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
+          }
         },
-        "/hosts/filtered/search": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the record based on query and blank query will return all records. It uses es searchafter for the pagination.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hosts"
-                ],
-                "summary": "Fetch the record based on query",
-                "parameters": [
-                    {
-                        "description": "Search Query",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.SearchRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/ipservices.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
-                                        },
-                                        "pagination": {
-                                            "$ref": "#/definitions/ipservices.SearchPagination"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    }
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/certificates/{hash}": {
+      "get": {
+        "tags": [
+          "Certificate"
+        ],
+        "summary": "Get the complete certificate",
+        "description": "Get the complete certificate based on provided hash",
+        "parameters": [
+          {
+            "name": "hash",
+            "in": "path",
+            "description": "get the complete cert by hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.CertificateHashResponse"
                 }
+              }
             }
-        },
-        "/hosts/search": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the record based on query and blank query will return all records. It uses es searchafter for the pagination.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hosts"
-                ],
-                "summary": "Fetch the record based on query",
-                "parameters": [
-                    {
-                        "description": "Search Query",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.SearchRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/ipservices.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
-                                        },
-                                        "pagination": {
-                                            "$ref": "#/definitions/ipservices.SearchPagination"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/hosts/summary": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the summary of the field based on query",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hosts"
-                ],
-                "summary": "Create the summary of the field based on query",
-                "parameters": [
-                    {
-                        "description": "Summary",
-                        "name": "query",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.SummaryRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/ipservices.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/eshandler.Aggregate"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
-        },
-        "/hosts/{ip}/": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Returns the complete ip details",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hosts"
-                ],
-                "summary": "Fetch the latest ip details",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "get the ip",
-                        "name": "ip",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "408": {
-                        "description": "Request Timeout",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/ipservices.ErrorResponse"
-                        }
-                    }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/certificate.ErrorResponse"
                 }
+              }
             }
+          }
         },
-        "/ping": {
-            "get": {
-                "description": "Returns the pong as response",
-                "produces": [
-                    "text/plain"
-                ],
-                "tags": [
-                    "Health"
-                ],
-                "summary": "Health Check",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/credits/usage": {
+      "get": {
+        "tags": [
+          "Credits"
+        ],
+        "summary": "Get the user's credit usage details",
+        "description": "Get the user's credit usage details",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tokens.UserTokenStats"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tokens.ErrorResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tokens.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tokens.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/cves/all/{ip}/{page}": {
+      "get": {
+        "tags": [
+          "Hosts"
+        ],
+        "summary": "Get cve details",
+        "description": "Get the detailed cve details for ip based on page",
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "path",
+            "description": "get the ip",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "path",
+            "description": "get the page",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.IpCveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/dns/search": {
+      "post": {
+        "tags": [
+          "Dns"
+        ],
+        "summary": "Search subdomains",
+        "description": "Search subdomains based on the query",
+        "requestBody": {
+          "description": "Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/dns.DNSRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dns.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
                             "type": "string"
+                          }
+                        },
+                        "pagination": {
+                          "$ref": "#/components/schemas/dns.SearchPagination"
                         }
+                      }
                     }
+                  ]
                 }
+              }
             }
-        }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dns.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dns.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "query"
+      }
     },
-    "definitions": {
-        "certificate.APIResponse": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "pagination": {},
-                "success": {
-                    "type": "boolean"
-                }
+    "/domain/count": {
+      "post": {
+        "tags": [
+          "Dns"
+        ],
+        "summary": "Get records count",
+        "description": "Get count of records based on query",
+        "requestBody": {
+          "description": "Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/dns.DNSCountRequest"
+              }
             }
+          },
+          "required": true
         },
-        "certificate.CertCount": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                }
-            }
-        },
-        "certificate.CertCountRequest": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string"
-                }
-            }
-        },
-        "certificate.CertScroll": {
-            "type": "object",
-            "properties": {
-                "certificates": {
-                    "type": "array",
-                    "items": {}
-                },
-                "next_batch": {
-                    "type": "string"
-                }
-            }
-        },
-        "certificate.CertScrollRequest": {
-            "type": "object",
-            "required": [
-                "limit",
-                "query"
-            ],
-            "properties": {
-                "from": {
-                    "type": "integer"
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "query": {
-                    "type": "string"
-                }
-            }
-        },
-        "certificate.CertSearchRequest": {
-            "type": "object",
-            "required": [
-                "limit"
-            ],
-            "properties": {
-                "limit": {
-                    "type": "integer"
-                },
-                "query": {
-                    "type": "string"
-                },
-                "start": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dns.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/dns.Data"
+                        }
+                      }
                     }
+                  ]
                 }
+              }
             }
-        },
-        "certificate.CertSummaryRequest": {
-            "type": "object",
-            "required": [
-                "field",
-                "limit"
-            ],
-            "properties": {
-                "field": {
-                    "type": "string"
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "query": {
-                    "type": "string"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dns.ErrorResponse"
                 }
+              }
             }
-        },
-        "certificate.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dns.ErrorResponse"
                 }
+              }
             }
+          }
         },
-        "certificate.NextBatchRequest": {
-            "type": "object",
-            "required": [
-                "scroll_token"
-            ],
-            "properties": {
-                "scroll_token": {
-                    "type": "string"
-                }
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/domain/search": {
+      "post": {
+        "tags": [
+          "Dns"
+        ],
+        "summary": "Search subdomains",
+        "description": "Search subdomains based on the query",
+        "requestBody": {
+          "description": "Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/dns.DNSRequest"
+              }
             }
+          },
+          "required": true
         },
-        "certificate.SearchPagination": {
-            "type": "object",
-            "properties": {
-                "last": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dns.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "pagination": {
+                          "$ref": "#/components/schemas/dns.SearchPagination"
+                        }
+                      }
                     }
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "start": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dns.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dns.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/domain/subdomain/count": {
+      "post": {
+        "tags": [
+          "Dns"
+        ],
+        "summary": "Get records count",
+        "description": "Get count of subdomain records based on query",
+        "requestBody": {
+          "description": "Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/dns.DNSCountRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/dns.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/dns.Data"
+                        }
+                      }
                     }
-                },
-                "total": {
-                    "type": "integer"
+                  ]
                 }
+              }
             }
-        },
-        "dns.APIResponse": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "pagination": {},
-                "success": {
-                    "type": "boolean"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dns.ErrorResponse"
                 }
+              }
             }
-        },
-        "dns.DNSCountRequest": {
-            "type": "object",
-            "required": [
-                "domain"
-            ],
-            "properties": {
-                "domain": {
-                    "type": "string"
-                },
-                "publishedAfter": {
-                    "type": "string"
-                },
-                "publishedBefore": {
-                    "type": "string"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dns.ErrorResponse"
                 }
+              }
             }
+          }
         },
-        "dns.DNSRequest": {
-            "type": "object",
-            "required": [
-                "domain",
-                "limit"
-            ],
-            "properties": {
-                "domain": {
-                    "type": "string"
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "publishedAfter": {
-                    "type": "string"
-                },
-                "publishedBefore": {
-                    "type": "string"
-                },
-                "start": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/exposed/buckets/count": {
+      "post": {
+        "tags": [
+          "ExposedBuckets"
+        ],
+        "summary": "Get exposed bucket count",
+        "description": "Get exposed bucket count according to provided filters",
+        "requestBody": {
+          "description": "Count Request",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/exposed.CountRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/exposed.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/exposed.SearchCount"
+                        }
+                      }
                     }
+                  ]
                 }
+              }
             }
-        },
-        "dns.Data": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
                 }
+              }
             }
-        },
-        "dns.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
                 }
+              }
             }
+          }
         },
-        "dns.SearchPagination": {
-            "type": "object",
-            "properties": {
-                "last": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/exposed/buckets/search": {
+      "post": {
+        "tags": [
+          "ExposedBuckets"
+        ],
+        "summary": "Search exposed buckets",
+        "description": "Search exposed buckets according to provided filters\nSearch across categories {img, aud, vid, font, doc, src, web, bkup, dbdump}\nSearch across labels {credential, financial, pii, legal, ip, medical, hr, report, confidential, backup, compromised, vulnerable}\nSearch across providers {aws, gcp, do, linode}",
+        "requestBody": {
+          "description": "Search Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/exposed.SearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/exposed.BucketAPIResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/exposed/buckets/summary": {
+      "post": {
+        "tags": [
+          "ExposedBuckets"
+        ],
+        "summary": "Get Exposed buckets summary",
+        "description": "Get Returns exposed buckets aggregated count according to filters",
+        "requestBody": {
+          "description": "Summary Request",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/exposed.SummaryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/exposed.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/exposed.Aggregate"
+                        }
+                      }
                     }
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "start": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/exposed/files/count": {
+      "post": {
+        "tags": [
+          "ExposedFiles"
+        ],
+        "summary": "Get file count",
+        "description": "Returns overall count of exposed bucket files according to filters",
+        "requestBody": {
+          "description": "Count Request",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/exposed.CountRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/exposed.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/exposed.SearchCount"
+                        }
+                      }
                     }
-                },
-                "total": {
-                    "type": "integer"
+                  ]
                 }
+              }
             }
-        },
-        "eshandler.Aggregate": {
-            "type": "object",
-            "properties": {
-                "buckets": {
-                    "type": "array",
-                    "items": {}
-                },
-                "doc_count_error_upper_bound": {
-                    "type": "integer"
-                },
-                "sum_other_doc_count": {
-                    "type": "integer"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
                 }
+              }
             }
-        },
-        "exposed.APIResponse": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "pagination": {},
-                "success": {
-                    "type": "boolean"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
                 }
+              }
             }
+          }
         },
-        "exposed.Aggregate": {
-            "type": "object",
-            "properties": {
-                "buckets": {
-                    "type": "array",
-                    "items": {}
-                },
-                "doc_count_error_upper_bound": {
-                    "type": "integer"
-                },
-                "sum_other_doc_count": {
-                    "type": "integer"
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/exposed/files/search": {
+      "post": {
+        "tags": [
+          "ExposedFiles"
+        ],
+        "summary": "Search exposed files",
+        "description": "Search exposed files using advanved filters\nSearch across categories {img, aud, vid, font, txt, doc, src, db, march, arch, 3d, exec, key, cert}\nSearch across labels {credential, financial, pii, legal, ip, medical, hr, report, confidential, backup, compromised, vulnerable}\nSearch across providers {aws, gcp, do, linode}",
+        "requestBody": {
+          "description": "Search Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/exposed.SearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/exposed.FileAPIResponse"
                 }
+              }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
         },
-        "exposed.Bucket": {
-            "type": "object",
-            "properties": {
-                "age_in_days": {
-                    "type": "integer"
-                },
-                "categories": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/exposed/files/summary": {
+      "post": {
+        "tags": [
+          "ExposedFiles"
+        ],
+        "summary": "Get file summary",
+        "description": "Returns a summary of exposed bucket files according to provided filters",
+        "requestBody": {
+          "description": "Summary Request",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/exposed.SummaryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/exposed.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/exposed.Aggregate"
+                        }
+                      }
                     }
-                },
-                "deleted": {
-                    "type": "boolean"
-                },
-                "ef_mod_at": {
-                    "type": "string"
-                },
-                "file_cat_count": {
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/exposed/{category}/": {
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "summary": "Get the fields for exposed",
+        "description": "Get the list of fields that can be used to query on exposed buckets and files",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "description": "get the category",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/fields.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/fields.Field"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fields.ErrorResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fields.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fields.ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fields/certificates/{category}/": {
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "summary": "Get the fields for certificates",
+        "description": "Get the list of fields to query upon certificates",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "description": "get the category",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/fields.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/fields.Field"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fields.ErrorResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fields.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fields.ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fields/hosts/{category}/": {
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "summary": "Get the fields for hosts",
+        "description": "Get the list of fields to query on host",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "description": "get the category",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/fields.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/fields.Field"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fields.ErrorResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fields.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fields.ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hosts/count": {
+      "post": {
+        "tags": [
+          "Hosts"
+        ],
+        "summary": "Get the record count",
+        "description": "Returns the total no of records based on query",
+        "requestBody": {
+          "description": "Count Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/ipservices.CountRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ipservices.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        " meta": {
+                          "$ref": "#/components/schemas/ipservices.PaginationStruct"
+                        },
+                        "data": {
+                          "$ref": "#/components/schemas/ipservices.CertCount"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        " error": {
+                          "type": "string"
+                        },
+                        "success": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        " error": {
+                          "type": "string"
+                        },
+                        "success": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        " error": {
+                          "type": "string"
+                        },
+                        "success": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/hosts/cve/{ip}/": {
+      "get": {
+        "tags": [
+          "Hosts"
+        ],
+        "summary": "Get ip cve details",
+        "description": "Get detailed lost of cve ips",
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "path",
+            "description": "get the ip",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.IpCveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/hosts/cves/{ip}/{cve}": {
+      "get": {
+        "tags": [
+          "Hosts"
+        ],
+        "summary": "Get cve",
+        "description": "Get the detailed cve based on ip and cve",
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "path",
+            "description": "host ip ip",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cve",
+            "in": "path",
+            "description": "cve id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.IpCveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/hosts/exploits/{ip}/": {
+      "get": {
+        "tags": [
+          "Hosts"
+        ],
+        "summary": "Get exploits for ip",
+        "description": "Get the detailed list of exploits for the ip",
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "path",
+            "description": "get the ip",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.IpCveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/hosts/exploits/{ip}/{cve}": {
+      "get": {
+        "tags": [
+          "Hosts"
+        ],
+        "summary": "Get exploits for ip and cve",
+        "description": "Get the detailed exploit details for ip and cve",
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "path",
+            "description": "ip address of the host",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cve",
+            "in": "path",
+            "description": "cve id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ipservices.APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/vision.ExploitDetails"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/hosts/search": {
+      "post": {
+        "tags": [
+          "Hosts"
+        ],
+        "summary": "Search hosts",
+        "description": "Get the detailed list of hosts based on query",
+        "requestBody": {
+          "description": "Search Query",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/ipservices.SearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.HostsSearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        " error": {
+                          "type": "string"
+                        },
+                        "success": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        " error": {
+                          "type": "string"
+                        },
+                        "success": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        " error": {
+                          "type": "string"
+                        },
+                        "success": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/hosts/summary": {
+      "post": {
+        "tags": [
+          "Hosts"
+        ],
+        "summary": "Get summary",
+        "description": "Get the summary of hosts based on the field",
+        "requestBody": {
+          "description": "Summary",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/ipservices.SummaryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.HostsSummaryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codegen-request-body-name": "query"
+      }
+    },
+    "/hosts/{ip}/": {
+      "get": {
+        "tags": [
+          "Hosts"
+        ],
+        "summary": "Get the latest ip details",
+        "description": "Get the complete and latest ip details",
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "path",
+            "description": "get the ip",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.HostsIpDetailsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipservices.ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/ping": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health Check",
+        "description": "Returns the pong as response",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "certificate.APIResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object"
+          },
+          "pagination": {
+            "type": "object"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "certificate.CertCount": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "certificate.CertCountRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        }
+      },
+      "certificate.CertScroll": {
+        "type": "object",
+        "properties": {
+          "certificates": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "next_batch": {
+            "type": "string"
+          }
+        }
+      },
+      "certificate.CertScrollRequest": {
+        "required": [
+          "limit",
+          "query"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          }
+        }
+      },
+      "certificate.CertSearchRequest": {
+        "required": [
+          "limit"
+        ],
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          },
+          "start": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "certificate.CertSummaryRequest": {
+        "required": [
+          "field",
+          "limit"
+        ],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          }
+        }
+      },
+      "certificate.CertificateHashResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "certificate": {
+                "type": "object",
+                "properties": {
+                  "extensions": {
                     "type": "object",
-                    "additionalProperties": {
-                        "type": "integer"
-                    }
-                },
-                "files": {
-                    "type": "integer"
-                },
-                "ins_at": {
-                    "type": "string"
-                },
-                "labels": {
-                    "type": "array",
-                    "items": {
+                    "properties": {
+                      "authority_info_access": {
+                        "type": "object",
+                        "properties": {
+                          "issuer_urls": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "ocsp_urls": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "authority_key_id": {
                         "type": "string"
+                      },
+                      "basic_constraints": {
+                        "type": "object",
+                        "properties": {
+                          "is_ca": {
+                            "type": "boolean"
+                          }
+                        }
+                      },
+                      "certificate_policies": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "cps": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "id": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "ct_poison": {
+                        "type": "boolean"
+                      },
+                      "extended_key_usage": {
+                        "type": "object",
+                        "properties": {
+                          "client_auth": {
+                            "type": "boolean"
+                          },
+                          "server_auth": {
+                            "type": "boolean"
+                          }
+                        }
+                      },
+                      "key_usage": {
+                        "type": "object",
+                        "properties": {
+                          "digital_signature": {
+                            "type": "boolean"
+                          }
+                        }
+                      },
+                      "subject_alt_name": {
+                        "type": "object",
+                        "properties": {
+                          "dns_names": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "subject_key_id": {
+                        "type": "string"
+                      }
                     }
-                },
-                "last_found_at": {
+                  },
+                  "fingerprint_md5": {
                     "type": "string"
-                },
-                "last_open_at": {
+                  },
+                  "fingerprint_sha1": {
                     "type": "string"
-                },
-                "lf_mod_at": {
+                  },
+                  "fingerprint_sha256": {
                     "type": "string"
+                  },
+                  "issuer": {
+                    "type": "object",
+                    "properties": {
+                      "common_name": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "country": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "organization": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "redacted": {
+                    "type": "boolean"
+                  },
+                  "serial_number": {
+                    "type": "string"
+                  },
+                  "signature": {
+                    "type": "object",
+                    "properties": {
+                      "signature_algorithm": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "oid": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "subject": {
+                    "type": "object",
+                    "properties": {
+                      "common_name": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "subject_alt_name": {
+                    "type": "object",
+                    "properties": {
+                      "dns_names": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "extended_dns_names": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "domain": {
+                              "type": "string"
+                            },
+                            "fld": {
+                              "type": "string"
+                            },
+                            "subdomain": {
+                              "type": "string"
+                            },
+                            "tld": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "subject_key_info": {
+                    "type": "object",
+                    "properties": {
+                      "fingerprint_sha256": {
+                        "type": "string"
+                      },
+                      "key_algorithm": {
+                        "type": "string"
+                      },
+                      "public_key": {
+                        "type": "object",
+                        "properties": {
+                          "b": {
+                            "type": "string"
+                          },
+                          "curve": {
+                            "type": "string"
+                          },
+                          "gx": {
+                            "type": "string"
+                          },
+                          "gy": {
+                            "type": "string"
+                          },
+                          "length": {
+                            "type": "integer"
+                          },
+                          "p": {
+                            "type": "string"
+                          },
+                          "x": {
+                            "type": "string"
+                          },
+                          "y": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "tbs_fingerprint": {
+                    "type": "string"
+                  },
+                  "validation_level": {
+                    "type": "string"
+                  },
+                  "validity": {
+                    "type": "object",
+                    "properties": {
+                      "end": {
+                        "type": "string"
+                      },
+                      "length": {
+                        "type": "integer"
+                      },
+                      "start": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "version": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "certificate.CertificateSearchData": {
+        "type": "object",
+        "properties": {
+          "fingerprint_md5": {
+            "type": "string"
+          },
+          "fingerprint_sha1": {
+            "type": "string"
+          },
+          "fingerprint_sha256": {
+            "type": "string"
+          },
+          "issuer": {
+            "type": "object",
+            "properties": {
+              "common_name": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "country": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "organization": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "subject": {
+            "type": "object",
+            "properties": {
+              "common_name": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "subject_alt_name": {
+            "type": "object",
+            "properties": {
+              "dns_names": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "validity": {
+            "type": "object",
+            "properties": {
+              "end": {
+                "type": "string"
+              },
+              "length": {
+                "type": "integer"
+              },
+              "start": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "certificate.CertificateSearchResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/certificate.CertificateSearchData"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "last": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "start": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "total": {
+                "type": "integer"
+              }
+            }
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "certificate.CertificateSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "buckets": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "doc_count": {
+                      "type": "integer"
+                    },
+                    "key": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "doc_count_error_upper_bound": {
+                "type": "integer"
+              },
+              "message": {
+                "type": "string"
+              },
+              "sum_other_doc_count": {
+                "type": "integer"
+              }
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "certificate.ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "certificate.NextBatchRequest": {
+        "required": [
+          "scroll_token"
+        ],
+        "type": "object",
+        "properties": {
+          "scroll_token": {
+            "type": "string"
+          }
+        }
+      },
+      "certificate.SearchPagination": {
+        "type": "object",
+        "properties": {
+          "last": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "start": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      },
+      "dns.APIResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object"
+          },
+          "pagination": {
+            "type": "object"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "dns.DNSCountRequest": {
+        "required": [
+          "domain"
+        ],
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string"
+          },
+          "publishedAfter": {
+            "type": "string"
+          },
+          "publishedBefore": {
+            "type": "string"
+          }
+        }
+      },
+      "dns.DNSRequest": {
+        "required": [
+          "domain",
+          "limit"
+        ],
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "publishedAfter": {
+            "type": "string"
+          },
+          "publishedBefore": {
+            "type": "string"
+          },
+          "start": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "dns.Data": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "dns.ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "dns.SearchPagination": {
+        "type": "object",
+        "properties": {
+          "last": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "start": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      },
+      "exposed.APIResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object"
+          },
+          "pagination": {
+            "type": "object"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "exposed.Aggregate": {
+        "type": "object",
+        "properties": {
+          "buckets": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "doc_count_error_upper_bound": {
+            "type": "integer"
+          },
+          "sum_other_doc_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "exposed.Bucket": {
+        "type": "object",
+        "properties": {
+          "age_in_days": {
+            "type": "integer"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deleted": {
+            "type": "boolean"
+          },
+          "ef_mod_at": {
+            "type": "string"
+          },
+          "file_cat_count": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "files": {
+            "type": "integer"
+          },
+          "ins_at": {
+            "type": "string"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "last_found_at": {
+            "type": "string"
+          },
+          "last_open_at": {
+            "type": "string"
+          },
+          "lf_mod_at": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "new_files": {
+            "type": "integer"
+          },
+          "open": {
+            "type": "boolean"
+          },
+          "owner_id": {
+            "type": "string"
+          },
+          "prev_scan_at": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "scan_at": {
+            "type": "string"
+          },
+          "sensitive_files": {
+            "type": "integer"
+          }
+        }
+      },
+      "exposed.BucketAPIResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/exposed.Bucket"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/exposed.SearchPagination"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "exposed.CountRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        }
+      },
+      "exposed.File": {
+        "type": "object",
+        "properties": {
+          "accessible": {
+            "type": "boolean"
+          },
+          "bucket": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "etag": {
+            "type": "string"
+          },
+          "ext": {
+            "type": "string"
+          },
+          "ext_desc": {
+            "type": "string"
+          },
+          "ins_at": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "mod_at": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "scan_at": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "exposed.FileAPIResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/exposed.File"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/exposed.SearchPagination"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "exposed.SearchCount": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "exposed.SearchPagination": {
+        "type": "object",
+        "properties": {
+          "last": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "start": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      },
+      "exposed.SearchRequest": {
+        "required": [
+          "limit"
+        ],
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          },
+          "sort_by": {
+            "type": "string"
+          },
+          "sort_dir": {
+            "type": "string"
+          },
+          "start": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "exposed.SummaryRequest": {
+        "required": [
+          "field",
+          "limit"
+        ],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          }
+        }
+      },
+      "fields.APIResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string"
+          },
+          "pagination": {
+            "type": "object"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "fields.ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "fields.Field": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "display_category": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ipservices.APIResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string"
+          },
+          "pagination": {
+            "type": "object"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ipservices.CertCount": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "ipservices.CountRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        }
+      },
+      "ipservices.ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ipservices.HostsIpDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "asn": {
+                "type": "object",
+                "properties": {
+                  "country_code": {
+                    "type": "object"
+                  },
+                  "number": {
+                    "type": "string"
+                  },
+                  "organization": {
+                    "type": "string"
+                  }
+                }
+              },
+              "asn_updated_at": {
+                "type": "string"
+              },
+              "banner": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "domains": {
+                "type": "object"
+              },
+              "hostnames": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "last_updated_at": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "ip": {
+                "type": "string"
+              },
+              "is_ipv4": {
+                "type": "boolean"
+              },
+              "is_ipv6": {
+                "type": "boolean"
+              },
+              "is_vuln": {
+                "type": "boolean"
+              },
+              "last_updated_at": {
+                "type": "string"
+              },
+              "location": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  },
+                  "continent": {
+                    "type": "string"
+                  },
+                  "coordinates": {
+                    "type": "object",
+                    "properties": {
+                      "latitude": {
+                        "type": "string"
+                      },
+                      "longitude": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "country_code": {
+                    "type": "string"
+                  },
+                  "country_name": {
+                    "type": "string"
+                  },
+                  "geo_point": {
+                    "type": "string"
+                  },
+                  "locale_code": {
+                    "type": "string"
+                  },
+                  "network": {
+                    "type": "string"
+                  },
+                  "postal_code": {
+                    "type": "string"
+                  }
+                }
+              },
+              "location_updated_at": {
+                "type": "string"
+              },
+              "scan_id": {
+                "type": "integer"
+              },
+              "services": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "_meta": {
+                      "type": "object",
+                      "properties": {
+                        "category": {
+                          "type": "string"
+                        },
+                        "desc": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "tags": {
+                          "type": "object"
+                        }
+                      }
+                    },
+                    "cve": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "severity": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "extra_info": {
+                      "type": "string"
+                    },
+                    "last_updated_at": {
+                      "type": "string"
+                    },
+                    "modules": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "port": {
+                      "type": "integer"
+                    },
+                    "product": {
+                      "type": "string"
+                    },
+                    "protocol": {
+                      "type": "string"
+                    },
+                    "softwares": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "edition": {
+                            "type": "string"
+                          },
+                          "language": {
+                            "type": "string"
+                          },
+                          "part": {
+                            "type": "string"
+                          },
+                          "product": {
+                            "type": "string"
+                          },
+                          "update": {
+                            "type": "string"
+                          },
+                          "uri": {
+                            "type": "string"
+                          },
+                          "vendor": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "tunnel": {
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "services_hash": {
+                "type": "string"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "last_updated_at": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "pretty_name": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "whois": {
+                "type": "object",
+                "properties": {
+                  "_encoding": {
+                    "type": "object",
+                    "properties": {
+                      "raw": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "descr": {
+                    "type": "object"
+                  },
+                  "network": {
+                    "type": "string"
+                  },
+                  "organization": {
+                    "type": "object"
+                  },
+                  "raw": {
+                    "type": "object"
+                  }
+                }
+              },
+              "whois_updated_at": {
+                "type": "object"
+              }
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ipservices.HostsSearchData": {
+        "type": "object",
+        "properties": {
+          "asn": {
+            "type": "object",
+            "properties": {
+              "country_code": {
+                "type": "string"
+              },
+              "number": {
+                "type": "string"
+              },
+              "organization": {
+                "type": "string"
+              }
+            }
+          },
+          "asn_updated_at": {
+            "type": "string"
+          },
+          "banner": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "domains": {
+            "type": "object"
+          },
+          "hostnames": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "last_updated_at": {
+                  "type": "string"
                 },
                 "name": {
-                    "type": "string"
-                },
-                "new_files": {
-                    "type": "integer"
-                },
-                "open": {
-                    "type": "boolean"
-                },
-                "owner_id": {
-                    "type": "string"
-                },
-                "prev_scan_at": {
-                    "type": "string"
-                },
-                "provider": {
-                    "type": "string"
-                },
-                "region": {
-                    "type": "string"
-                },
-                "scan_at": {
-                    "type": "string"
-                },
-                "sensitive_files": {
-                    "type": "integer"
+                  "type": "string"
                 }
+              }
             }
-        },
-        "exposed.BucketAPIResponse": {
+          },
+          "ip": {
+            "type": "string"
+          },
+          "is_ipv4": {
+            "type": "boolean"
+          },
+          "is_ipv6": {
+            "type": "boolean"
+          },
+          "is_vuln": {
+            "type": "boolean"
+          },
+          "last_updated_at": {
+            "type": "string"
+          },
+          "location": {
             "type": "object",
             "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/exposed.Bucket"
+              "city": {
+                "type": "string"
+              },
+              "continent": {
+                "type": "string"
+              },
+              "coordinates": {
+                "type": "object",
+                "properties": {
+                  "latitude": {
+                    "type": "string"
+                  },
+                  "longitude": {
+                    "type": "string"
+                  }
+                }
+              },
+              "country_code": {
+                "type": "string"
+              },
+              "country_name": {
+                "type": "string"
+              },
+              "geo_point": {
+                "type": "string"
+              },
+              "locale_code": {
+                "type": "string"
+              },
+              "network": {
+                "type": "string"
+              },
+              "postal_code": {
+                "type": "string"
+              }
+            }
+          },
+          "location_updated_at": {
+            "type": "string"
+          },
+          "scan_id": {
+            "type": "integer"
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "_meta": {
+                  "type": "object",
+                  "properties": {
+                    "category": {
+                      "type": "string"
+                    },
+                    "desc": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "tags": {
+                      "type": "object"
                     }
+                  }
                 },
-                "pagination": {
-                    "$ref": "#/definitions/exposed.SearchPagination"
+                "cve": {
+                  "type": "object"
                 },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "exposed.CountRequest": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string"
-                }
-            }
-        },
-        "exposed.File": {
-            "type": "object",
-            "properties": {
-                "accessible": {
-                    "type": "boolean"
+                "extra_info": {
+                  "type": "string"
                 },
-                "bucket": {
-                    "type": "string"
+                "last_updated_at": {
+                  "type": "string"
                 },
-                "category": {
-                    "type": "string"
-                },
-                "etag": {
-                    "type": "string"
-                },
-                "ext": {
-                    "type": "string"
-                },
-                "ext_desc": {
-                    "type": "string"
-                },
-                "ins_at": {
-                    "type": "string"
-                },
-                "label": {
-                    "type": "string"
-                },
-                "mod_at": {
-                    "type": "string"
+                "modules": {
+                  "type": "object",
+                  "additionalProperties": true
                 },
                 "name": {
-                    "type": "string"
+                  "type": "string"
                 },
-                "path": {
-                    "type": "string"
+                "port": {
+                  "type": "integer"
                 },
-                "provider": {
-                    "type": "string"
+                "product": {
+                  "type": "string"
                 },
-                "region": {
-                    "type": "string"
+                "protocol": {
+                  "type": "string"
                 },
-                "scan_at": {
-                    "type": "string"
+                "softwares": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
                 },
-                "size": {
-                    "type": "integer"
+                "tunnel": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "services_hash": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "last_updated_at": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "pretty_name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "whois": {
+            "type": "object",
+            "properties": {
+              "_encoding": {
+                "type": "object",
+                "properties": {
+                  "raw": {
+                    "type": "string"
+                  }
+                }
+              },
+              "descr": {
+                "type": "string"
+              },
+              "network": {
+                "type": "string"
+              },
+              "organization": {
+                "type": "string"
+              },
+              "raw": {
+                "type": "object"
+              }
+            }
+          },
+          "whois_updated_at": {
+            "type": "string"
+          }
+        }
+      },
+      "ipservices.HostsSearchResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ipservices.HostsSearchData"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "last": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "start": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "total": {
+                "type": "integer"
+              }
+            }
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ipservices.HostsSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "buckets": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "doc_count": {
+                      "type": "integer"
+                    },
+                    "key": {
+                      "type": "object"
+                    }
+                  }
+                }
+              },
+              "doc_count_error_upper_bound": {
+                "type": "integer"
+              },
+              "sum_other_doc_count": {
+                "type": "integer"
+              }
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ipservices.IpCveDetails": {
+        "type": "object",
+        "properties": {
+          "exploit": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "file": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "platform": {
+                  "type": "string"
                 },
                 "type": {
-                    "type": "string"
+                  "type": "string"
                 },
                 "url": {
-                    "type": "string"
+                  "type": "string"
                 }
+              }
             }
-        },
-        "exposed.FileAPIResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/exposed.File"
-                    }
-                },
-                "pagination": {
-                    "$ref": "#/definitions/exposed.SearchPagination"
-                },
-                "success": {
-                    "type": "boolean"
-                }
+          },
+          "id": {
+            "type": "string"
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
-        },
-        "exposed.SearchCount": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                }
+          },
+          "score": {
+            "type": "number"
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
-        },
-        "exposed.SearchPagination": {
-            "type": "object",
-            "properties": {
-                "last": {
-                    "type": "array",
-                    "items": {}
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "start": {
-                    "type": "array",
-                    "items": {}
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "exposed.SearchRequest": {
-            "type": "object",
-            "required": [
-                "limit"
-            ],
-            "properties": {
-                "limit": {
-                    "type": "integer"
-                },
-                "query": {
-                    "type": "string"
-                },
-                "sort_by": {
-                    "type": "string"
-                },
-                "sort_dir": {
-                    "type": "string"
-                },
-                "start": {
-                    "type": "array",
-                    "items": {}
-                }
-            }
-        },
-        "exposed.SummaryRequest": {
-            "type": "object",
-            "required": [
-                "field",
-                "limit"
-            ],
-            "properties": {
-                "field": {
-                    "type": "string"
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "query": {
-                    "type": "string"
-                }
-            }
-        },
-        "fields.APIResponse": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "message": {
-                    "type": "string"
-                },
-                "pagination": {},
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "fields.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "fields.Field": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "type": "string"
-                },
-                "display_category": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "ipservices.APIResponse": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "message": {
-                    "type": "string"
-                },
-                "pagination": {},
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "ipservices.CertCount": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                }
-            }
-        },
-        "ipservices.CountRequest": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string"
-                }
-            }
-        },
-        "ipservices.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "ipservices.SearchPagination": {
-            "type": "object",
-            "properties": {
-                "last": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    }
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "start": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "ipservices.SearchRequest": {
-            "type": "object",
-            "required": [
-                "limit"
-            ],
-            "properties": {
-                "limit": {
-                    "type": "integer"
-                },
-                "query": {
-                    "type": "string"
-                },
-                "start": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    }
-                }
-            }
-        },
-        "ipservices.SummaryRequest": {
-            "type": "object",
-            "required": [
-                "field",
-                "limit"
-            ],
-            "properties": {
-                "field": {
-                    "type": "string"
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "query": {
-                    "type": "string"
-                }
-            }
-        },
-        "tokens.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "tokens.UserTokenStats": {
-            "type": "object",
-            "properties": {
-                "expires_on": {
-                    "type": "integer"
-                },
-                "left": {
-                    "type": "integer"
-                },
-                "plan": {
-                    "type": "integer"
-                }
-            }
+          },
+          "severity": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "vector_string": {
+            "type": "string"
+          },
+          "weakness": {
+            "type": "string"
+          }
         }
+      },
+      "ipservices.IpCveResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ipservices.IpCveDetails"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ipservices.PaginationStruct": {
+        "type": "object",
+        "properties": {
+          "current": {
+            "type": "string"
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      },
+      "ipservices.SearchRequest": {
+        "required": [
+          "limit"
+        ],
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          },
+          "start": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "ipservices.SummaryRequest": {
+        "required": [
+          "field",
+          "limit"
+        ],
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          }
+        }
+      },
+      "tokens.ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "tokens.UserTokenStats": {
+        "type": "object",
+        "properties": {
+          "expires_on": {
+            "type": "integer"
+          },
+          "left": {
+            "type": "integer"
+          },
+          "plan": {
+            "type": "integer"
+          }
+        }
+      },
+      "vision.ExploitDetails": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
     },
-    "securityDefinitions": {
-        "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "X-API-Key",
-            "in": "header"
-        }
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "name": "X-API-Key",
+        "in": "header"
+      }
     }
+  },
+  "x-original-swagger-version": "2.0"
 }
